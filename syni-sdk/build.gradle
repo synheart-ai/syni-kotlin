@@ -1,0 +1,67 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.serialization'
+}
+
+android {
+    namespace 'com.syni.sdk'
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 26
+        targetSdk 35
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField "String", "SYNI_SPEC_VERSION", "\"${syniSpecVersion}\""
+        buildConfigField "String", "SYNI_SDK_VERSION", "\"${syniSdkVersion}\""
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+}
+
+dependencies {
+    // AndroidX Core
+    implementation "androidx.core:core-ktx:${coreKtxVersion}"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${lifecycleVersion}"
+
+    // Kotlin Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutinesVersion}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutinesVersion}"
+
+    // Kotlin Serialization
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:${serializationVersion}"
+
+    // OkHttp for networking
+    implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
+
+    // Unit Testing
+    testImplementation "junit:junit:${junitVersion}"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${coroutinesVersion}"
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:5.1.0"
+
+    // Android Instrumented Testing
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
+}
