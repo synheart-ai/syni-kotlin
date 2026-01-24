@@ -402,7 +402,7 @@ object Syni {
 
     private suspend fun getEngineAdapter(engineType: EngineType): EngineAdapter? {
         return when (engineType) {
-            EngineType.PORTABLE_LOCAL_ENGINE -> {
+            EngineType.LOCAL -> {
                 try {
                     engineManager.getLocalEngine()
                 } catch (e: Exception) {

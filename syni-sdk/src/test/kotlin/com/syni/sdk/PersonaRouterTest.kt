@@ -113,7 +113,7 @@ class PersonaRouterTest {
             isCloudAvailable = true
         )
 
-        assertEquals(EngineType.PORTABLE_LOCAL_ENGINE, engine)
+        assertEquals(EngineType.LOCAL, engine)
     }
 
     @Test
@@ -176,7 +176,7 @@ class PersonaRouterTest {
             isCloudAvailable = true
         )
 
-        assertEquals(EngineType.PORTABLE_LOCAL_ENGINE, engine)
+        assertEquals(EngineType.LOCAL, engine)
     }
 
     @Test
@@ -270,7 +270,7 @@ class PersonaRouterTest {
 
         val fallback = router.getFallbackEngine(
             persona = persona,
-            failedEngine = EngineType.PORTABLE_LOCAL_ENGINE,
+            failedEngine = EngineType.LOCAL,
             options = GenerationOptions.DEFAULT,
             isLocalAvailable = true,
             isCloudAvailable = true
@@ -298,7 +298,7 @@ class PersonaRouterTest {
             isCloudAvailable = true
         )
 
-        assertEquals(EngineType.PORTABLE_LOCAL_ENGINE, fallback)
+        assertEquals(EngineType.LOCAL, fallback)
     }
 
     @Test
@@ -314,7 +314,7 @@ class PersonaRouterTest {
 
         val fallback = router.getFallbackEngine(
             persona = persona,
-            failedEngine = EngineType.PORTABLE_LOCAL_ENGINE,
+            failedEngine = EngineType.LOCAL,
             options = GenerationOptions.LOCAL_ONLY,
             isLocalAvailable = true,
             isCloudAvailable = true
