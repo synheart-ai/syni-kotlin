@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    // AGP 9 auto-registers the Kotlin extension; explicitly applying
+    // `org.jetbrains.kotlin.android` here would double-register it.
     id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
@@ -43,9 +44,8 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = '17'
-    }
+    // AGP 9 removed the `android.kotlinOptions {}` block — Kotlin
+    // compile settings now go through the top-level `kotlin {}` DSL.
 
     buildFeatures {
         buildConfig true
@@ -64,6 +64,13 @@ android {
         main {
             jniLibs.srcDirs = ['src/main/jniLibs']
         }
+    }
+}
+
+// Kotlin compile settings (AGP 9 — replaces the `android.kotlinOptions` block).
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 
