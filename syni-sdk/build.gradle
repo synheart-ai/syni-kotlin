@@ -17,6 +17,18 @@ android {
 
         buildConfigField "String", "SYNI_SPEC_VERSION", "\"${syniSpecVersion}\""
         buildConfigField "String", "SYNI_SDK_VERSION", "\"${syniSdkVersion}\""
+
+        // NDK configuration for syni-runtime JNI
+        ndk {
+            abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86_64', 'x86'
+        }
+
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+                arguments "-DANDROID_STL=c++_shared"
+            }
+        }
     }
 
     buildTypes {
@@ -37,6 +49,21 @@ android {
 
     buildFeatures {
         buildConfig true
+    }
+
+    // Configure CMake for native build
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.18.1"
+        }
+    }
+
+    // Source sets for native libraries
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs']
+        }
     }
 }
 

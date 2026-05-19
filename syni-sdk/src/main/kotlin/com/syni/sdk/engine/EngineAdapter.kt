@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 
 /**
  * Interface for generation engines.
- * Implemented by PortableLocalEngine and CloudClient.
+ * Implemented by LocalEngine and CloudClient.
  */
 interface EngineAdapter {
     /**

@@ -63,9 +63,9 @@ data class ResponseMetadata(
  */
 @Serializable
 enum class EngineType {
-    /** Local llama.cpp-based engine. */
-    @SerialName("portable_local_engine")
-    PORTABLE_LOCAL_ENGINE,
+    /** Local syni-runtime engine (llama.cpp-based). */
+    @SerialName("local")
+    LOCAL,
 
     /** Syni cloud gateway. */
     @SerialName("cloud")

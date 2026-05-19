@@ -18,7 +18,7 @@ class EngineManager(
     private val modelManager: ModelManager
 ) {
     private val mutex = Mutex()
-    private var localEngine: PortableLocalEngine? = null
+    private var localEngine: LocalEngine? = null
     private val isShutdown = AtomicBoolean(false)
 
     /**
@@ -28,7 +28,7 @@ class EngineManager(
      * @return The local engine adapter
      * @throws SyniError.EngineUnavailable if no model is available
      */
-    suspend fun getLocalEngine(): PortableLocalEngine = mutex.withLock {
+    suspend fun getLocalEngine(): LocalEngine = mutex.withLock {
         if (isShutdown.get()) {
             throw SyniError.EngineUnavailable("Engine manager has been shut down")
         }
@@ -38,7 +38,7 @@ class EngineManager(
         val modelPath = modelManager.getActiveModelPath()
             ?: throw SyniError.EngineUnavailable("No model available. Download a model first.")
 
-        val engine = PortableLocalEngine(
+        val engine = LocalEngine(
             context = context,
             config = config,
             modelPath = modelPath

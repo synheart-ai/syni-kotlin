@@ -99,7 +99,7 @@ class PersonaRouter(
                     "Local engine requested but not available"
                 )
             }
-            return EngineType.PORTABLE_LOCAL_ENGINE
+            return EngineType.LOCAL
         }
 
         if (options.cloudOnly) {
@@ -119,9 +119,9 @@ class PersonaRouter(
         // Follow the routing policy's preferred engine order
         for (engine in policy.preferredEngines) {
             when (engine) {
-                EngineType.PORTABLE_LOCAL_ENGINE -> {
+                EngineType.LOCAL -> {
                     if (policy.allowLocal && isLocalAvailable) {
-                        return EngineType.PORTABLE_LOCAL_ENGINE
+                        return EngineType.LOCAL
                     }
                 }
                 EngineType.CLOUD -> {
@@ -138,7 +138,7 @@ class PersonaRouter(
 
         // If no preferred engine is available, try any allowed engine
         if (policy.allowLocal && isLocalAvailable) {
-            return EngineType.PORTABLE_LOCAL_ENGINE
+            return EngineType.LOCAL
         }
         if (policy.allowCloud && isCloudAvailable) {
             return EngineType.CLOUD
@@ -171,14 +171,14 @@ class PersonaRouter(
         }
 
         return when (failedEngine) {
-            EngineType.PORTABLE_LOCAL_ENGINE -> {
+            EngineType.LOCAL -> {
                 if (policy.allowCloud && isCloudAvailable) {
                     EngineType.CLOUD
                 } else null
             }
             EngineType.CLOUD -> {
                 if (policy.allowLocal && isLocalAvailable) {
-                    EngineType.PORTABLE_LOCAL_ENGINE
+                    EngineType.LOCAL
                 } else null
             }
             EngineType.FALLBACK -> null

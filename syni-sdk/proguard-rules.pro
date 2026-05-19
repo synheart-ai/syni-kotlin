@@ -1,6 +1,6 @@
 # ProGuard rules for syni-sdk library
 
-# Keep the JNI methods for PortableLocalEngine
+# Keep the JNI methods for LocalEngine
 -keepclasseswithmembernames class * {
     native <methods>;
 }

@@ -78,7 +78,7 @@ data class Persona(
 data class RoutingPolicy(
     /** Ordered list of preferred engines. */
     @SerialName("preferred_engines")
-    val preferredEngines: List<EngineType> = listOf(EngineType.PORTABLE_LOCAL_ENGINE, EngineType.CLOUD),
+    val preferredEngines: List<EngineType> = listOf(EngineType.LOCAL, EngineType.CLOUD),
 
     /** Allow local engine execution. */
     @SerialName("allow_local")
@@ -95,21 +95,21 @@ data class RoutingPolicy(
     companion object {
         /** Prefer local engine, fall back to cloud. */
         val LOCAL_PREFERRED = RoutingPolicy(
-            preferredEngines = listOf(EngineType.PORTABLE_LOCAL_ENGINE, EngineType.CLOUD),
+            preferredEngines = listOf(EngineType.LOCAL, EngineType.CLOUD),
             allowLocal = true,
             allowCloud = true
         )
 
         /** Prefer cloud, fall back to local. */
         val CLOUD_PREFERRED = RoutingPolicy(
-            preferredEngines = listOf(EngineType.CLOUD, EngineType.PORTABLE_LOCAL_ENGINE),
+            preferredEngines = listOf(EngineType.CLOUD, EngineType.LOCAL),
             allowLocal = true,
             allowCloud = true
         )
 
         /** Local only, no cloud fallback. */
         val LOCAL_ONLY = RoutingPolicy(
-            preferredEngines = listOf(EngineType.PORTABLE_LOCAL_ENGINE),
+            preferredEngines = listOf(EngineType.LOCAL),
             allowLocal = true,
             allowCloud = false
         )
