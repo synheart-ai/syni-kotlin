@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace 'com.syni.sdk'
+    namespace 'ai.synheart.syni'
     compileSdk 35
 
     defaultConfig {

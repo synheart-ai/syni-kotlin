@@ -30,9 +30,9 @@ extern int32_t syni_engine_healthcheck(syni_engine_t* engine);
 extern int32_t syni_token_count(syni_engine_t* engine, const char* model_path, const char* text);
 extern char* syni_version(void);
 
-// JNI helper macros
+// JNI helper macros — package path matches `ai.synheart.syni.runtime.SyniNative`.
 #define JNI_METHOD(returnType, methodName) \
-    JNIEXPORT returnType JNICALL Java_com_syni_sdk_engine_SyniNative_##methodName
+    JNIEXPORT returnType JNICALL Java_ai_synheart_syni_runtime_SyniNative_##methodName
 
 // Convert Java string to C string (caller must free)
 static char* jstring_to_cstring(JNIEnv *env, jstring jstr) {

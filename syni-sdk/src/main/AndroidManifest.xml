@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Network access for cloud gateway -->
+    <!-- Network access for cloud chat + model downloads. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <!-- Storage for model files (scoped storage on Android 10+) -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-
-    <application>
-        <!-- Content provider for IPC with keyboard extension -->
-        <provider
-            android:name=".keyboard.SyniContentProvider"
-            android:authorities="${applicationId}.syni.provider"
-            android:exported="false"
-            android:grantUriPermissions="true" />
-    </application>
 
 </manifest>
