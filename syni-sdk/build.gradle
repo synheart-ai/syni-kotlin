@@ -101,7 +101,7 @@ dependencies {
     testImplementation 'net.java.dev.jna:jna:5.14.0'
 
     // Android Instrumented Testing
-    androidTestImplementation "androidx.test.ext:junit:1.1.5"
+    androidTestImplementation "androidx.test.ext:junit:1.3.0"
     androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
 }
 
