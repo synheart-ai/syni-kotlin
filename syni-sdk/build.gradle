@@ -90,7 +90,7 @@ dependencies {
     // JNA for syni-runtime native library (`libsyni_ffi`). The .so is
     // delivered to the consumer app via `synheart install runtime syni`;
     // see README for the one-line app-side gradle wiring.
-    api 'net.java.dev.jna:jna:5.14.0@aar'
+    api 'net.java.dev.jna:jna:5.18.1@aar'
 
     // Unit Testing
     testImplementation "junit:junit:${junitVersion}"
@@ -98,7 +98,7 @@ dependencies {
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.mockito.kotlin:mockito-kotlin:5.1.0"
     // JNA non-Android JAR for host unit tests.
-    testImplementation 'net.java.dev.jna:jna:5.14.0'
+    testImplementation 'net.java.dev.jna:jna:5.18.1'
 
     // Android Instrumented Testing
     androidTestImplementation "androidx.test.ext:junit:1.1.5"
