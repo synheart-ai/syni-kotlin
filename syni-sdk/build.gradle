@@ -1,0 +1,201 @@
+plugins {
+    id 'com.android.library'
+    // AGP 9 auto-registers the Kotlin extension; explicitly applying
+    // `org.jetbrains.kotlin.android` here would double-register it.
+    id 'org.jetbrains.kotlin.plugin.serialization'
+    id 'maven-publish'
+    id 'signing'
+}
+
+import java.util.Base64
+
+group = (project.findProperty('GROUP') ?: 'ai.synheart') as String
+version = (project.findProperty('VERSION_NAME') ?: project.findProperty('syniSdkVersion') ?: '0.0.2') as String
+def POM_ARTIFACT_ID = (project.findProperty('POM_ARTIFACT_ID') ?: 'syni-sdk') as String
+
+description = 'Synheart on-device agent SDK for Android — thin wrapper around the closed syni-runtime native core and the Synheart cloud agent API.'
+
+android {
+    namespace 'ai.synheart.syni'
+    compileSdk 35
+
+    lint {
+        // CI runs `lint` separately; don't fail `build`/publishing on lint issues.
+        abortOnError false
+    }
+
+    defaultConfig {
+        minSdk 26
+        targetSdk 35
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField "String", "SYNI_SPEC_VERSION", "\"${syniSpecVersion}\""
+        buildConfigField "String", "SYNI_SDK_VERSION", "\"${syniSdkVersion}\""
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+}
+
+// Kotlin compile settings (AGP 9 — replaces the `android.kotlinOptions` block).
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
+}
+
+dependencies {
+    // AndroidX Core
+    implementation "androidx.core:core-ktx:${coreKtxVersion}"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${lifecycleVersion}"
+
+    // Kotlin Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutinesVersion}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutinesVersion}"
+
+    // Kotlin Serialization
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:${serializationVersion}"
+
+    // OkHttp for networking
+    implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
+
+    // JNA for syni-runtime native library (`libsyni_ffi`). The .so is
+    // delivered to the consumer app via `synheart install runtime syni`;
+    // see README for the one-line app-side gradle wiring.
+    api 'net.java.dev.jna:jna:5.14.0@aar'
+
+    // Unit Testing
+    testImplementation "junit:junit:${junitVersion}"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${coroutinesVersion}"
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:5.1.0"
+    // JNA non-Android JAR for host unit tests.
+    testImplementation 'net.java.dev.jna:jna:5.14.0'
+
+    // Android Instrumented Testing
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = project.group as String
+                artifactId = POM_ARTIFACT_ID
+                version = project.version as String
+
+                pom {
+                    name = 'Synheart Syni SDK'
+                    description = project.description
+                    url = 'https://github.com/synheart-ai/syni-kotlin'
+
+                    licenses {
+                        license {
+                            name = 'Apache-2.0'
+                            url = 'https://www.apache.org/licenses/LICENSE-2.0'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'israel-goytom'
+                            name = 'Israel Goytom'
+                            email = 'israel@synheart.ai'
+                        }
+                        developer {
+                            id = 'synheart-ai'
+                            name = 'Synheart AI Team'
+                            email = 'dev@synheart.ai'
+                        }
+                    }
+
+                    scm {
+                        connection = 'scm:git:git://github.com/synheart-ai/syni-kotlin.git'
+                        developerConnection = 'scm:git:ssh://github.com/synheart-ai/syni-kotlin.git'
+                        url = 'https://github.com/synheart-ai/syni-kotlin'
+                    }
+                }
+            }
+        }
+    }
+
+    signing {
+        // Support both `GPG_*` and `SIGNING_*` naming (CI commonly uses ORG_GRADLE_PROJECT_SIGNING_*).
+        def signingKey =
+                project.findProperty('GPG_PRIVATE_KEY')
+                        ?: project.findProperty('SIGNING_KEY')
+                        ?: System.getenv('GPG_PRIVATE_KEY')
+                        ?: System.getenv('SIGNING_KEY')
+                        ?: ''
+        def signingKeyBase64 =
+                project.findProperty('GPG_PRIVATE_KEY_BASE64')
+                        ?: project.findProperty('SIGNING_KEY_BASE64')
+                        ?: System.getenv('GPG_PRIVATE_KEY_BASE64')
+                        ?: System.getenv('SIGNING_KEY_BASE64')
+                        ?: ''
+        def signingPassword =
+                project.findProperty('GPG_PASSPHRASE')
+                        ?: project.findProperty('SIGNING_PASSWORD')
+                        ?: System.getenv('GPG_PASSPHRASE')
+                        ?: System.getenv('SIGNING_PASSWORD')
+                        ?: ''
+
+        if (signingKeyBase64) {
+            def normalized = signingKeyBase64.toString().replaceAll('\\s+', '')
+            signingKey = new String(Base64.getMimeDecoder().decode(normalized), 'UTF-8')
+        }
+
+        signingKey = (signingKey ?: '')
+                .toString()
+                .replace('\r\n', '\n')
+                .replace('\r', '\n')
+                .replace('\\n', '\n')
+                .trim()
+        signingPassword = (signingPassword ?: '').toString()
+
+        def hasSigning = signingKey && signingPassword
+
+        if (hasSigning) {
+            useInMemoryPgpKeys(signingKey, signingPassword)
+        }
+
+        required {
+            hasSigning && gradle.taskGraph.allTasks.any { t ->
+                def n = t.name.toLowerCase()
+                n.contains('sonatype') || n.contains('close') || n.contains('release')
+            }
+        }
+        sign publishing.publications.release
+    }
+}
