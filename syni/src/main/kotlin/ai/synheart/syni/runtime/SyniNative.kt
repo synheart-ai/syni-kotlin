@@ -13,8 +13,8 @@ import com.sun.jna.Pointer
  *     synheart install runtime syni
  *
  * which writes `libsyni_ffi.so` for every Android ABI under
- * `<app>/synheart/vendor/syni/android/jniLibs/`. To make JNA find the
- * library at runtime, consumers add that directory to their **app**
+ * `<app>/synheart/vendor/syni-runtime/android/jniLibs/`. To make JNA find
+ * the library at runtime, consumers add that directory to their **app**
  * module's `sourceSets.main.jniLibs.srcDirs` — see README.
  *
  * Internal to the SDK — public orchestration lives in

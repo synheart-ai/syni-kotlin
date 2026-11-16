@@ -5,6 +5,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed (documentation)
+
+- The README's Gradle snippet pointed at `synheart/vendor/syni/android/jniLibs`,
+  but `synheart install runtime syni` writes
+  `synheart/vendor/syni-runtime/android/jniLibs`. With the old path,
+  `libsyni_ffi.so` was not packaged and JNA could not load it. Point
+  `jniLibs.srcDirs` at the `syni-runtime` path.
+
 ## [0.0.3] - 2026-05-26
 
 ### Changed (BREAKING — coord rename, no code change)
