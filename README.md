@@ -49,7 +49,7 @@ synheart install runtime syni
 ```
 
 That writes `libsyni_ffi.so` for every Android ABI under
-`<your-project>/synheart/vendor/syni/android/jniLibs/`. Wire the vendor
+`<your-project>/synheart/vendor/syni-runtime/android/jniLibs/`. Wire the vendor
 path into your **app** module's `build.gradle` so JNA can find the
 library at runtime:
 
@@ -58,7 +58,7 @@ library at runtime:
 android {
     sourceSets {
         getByName("main").jniLibs.srcDirs(
-            file("${rootProject.projectDir}/synheart/vendor/syni/android/jniLibs"),
+            file("${rootProject.projectDir}/synheart/vendor/syni-runtime/android/jniLibs"),
         )
     }
 }
