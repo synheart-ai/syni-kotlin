@@ -1,18 +1,31 @@
 version: 2
-updates:
-  - package-ecosystem: "gradle"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 5
-    commit-message:
-      prefix: "deps"
 
-  - package-ecosystem: "github-actions"
-    directory: "/"
+multi-ecosystem-groups:
+  dependency-updates:
+    open-pull-requests-limit: 5
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: weekly
+      day: saturday
+      time: "10:00"
+      timezone: Africa/Addis_Ababa
     commit-message:
-      prefix: "ci"
+      prefix: deps
+
+updates:
+  - package-ecosystem: gradle
+    directory: "/"
+    patterns: ["*"]
+    multi-ecosystem-group: dependency-updates
+    ignore:
+      # Keep major upgrades separate for manual review.
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    patterns: ["*"]
+    multi-ecosystem-group: dependency-updates
+    ignore:
+      # Keep major upgrades separate for manual review.
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
